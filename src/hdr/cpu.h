@@ -9,10 +9,7 @@ class cpu_chip8 {
 public:
     // general purpose registers
     // VF is flag register
-    byte V0, V1, V2, V3;
-    byte V4, V5, V6, V7;
-    byte V8, V9, VA, VB;
-    byte VC, VD, VE, VF;
+    byte Vx[0xF];
     // register used for storing memory address
     word I;
     // timer registers
