@@ -1,5 +1,6 @@
 #pragma once
 #include "constants.h"
+#include "memory.h"
 #include <iostream>
 #include <map>
 #include <functional>
@@ -21,14 +22,16 @@ public:
     // stack pointer
     word SP;
 
-    // variable stores current instruction
-    word instruction;
+    // variables stores current instruction
+    byte low_instr, high_instr;
     // map stores opcode identifiers and pointers to functions for calling
     std::map<byte, std::function<void()>> opcode_table;
+    // raw pointer to memory
+    memory* mem;
 public:
     cpu_chip8();
-    void init_op_table();
-    void execute();
+    void init_op_table();   // initialize opcode table 
+    void execute();         // execute one command
 
 private:
     void CLS_or_RET();
