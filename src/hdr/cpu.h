@@ -24,6 +24,7 @@ public:
 
     // variables stores current instruction
     byte low_instr, high_instr;
+    word instruction;
     // map stores opcode identifiers and pointers to functions for calling
     std::map<byte, std::function<void()>> opcode_table;
     // raw pointer to memory
@@ -35,4 +36,19 @@ public:
 
 private:
     void CLS_or_RET();
+    void JP();          // jump to address nnn
+    void CALL();        //
+    void SE_IMM();
+    void SNE_IMM();
+    void SE();
+    void LD();
+    void ADD();
+    void GRP_1();
+    void SNE();
+    void LD_I();
+    void JP_V0();
+    void RND();
+    void DRW();
+    void SKP_or_SKNP();
+    void GRP_2();
 };

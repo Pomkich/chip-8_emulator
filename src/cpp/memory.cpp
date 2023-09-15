@@ -16,3 +16,17 @@ void memory::write(word address, byte data) {
         byte_arr[address] = data;
     }
 }
+
+word memory::read_w(word address) {
+    if (address >= 0 && address < MAX_MEM_SIZE) {
+        return ((word)byte_arr[address] << 8) | byte_arr[address + 1];
+    }
+    return 0;
+}
+
+void memory::write_w(word address, word data) {
+    if (address >= 0 && address < MAX_MEM_SIZE) {
+        byte_arr[address] = (data >> 8);
+        byte_arr[address + 1] = data & 0x00FF;
+    }
+}

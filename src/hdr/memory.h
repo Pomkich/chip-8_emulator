@@ -11,4 +11,7 @@ public:
     memory();
     byte read(word address);
     void write(word address, byte data);
+
+    word read_w(word address);
+    void write_w(word address, word data);
 };
