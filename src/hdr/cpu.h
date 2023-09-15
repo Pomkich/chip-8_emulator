@@ -1,6 +1,8 @@
 #pragma once
 #include "constants.h"
 #include <iostream>
+#include <map>
+#include <functional>
 
 class cpu_chip8 {
 public:
@@ -19,6 +21,15 @@ public:
     // stack pointer
     word SP;
 
+    // variable stores current instruction
+    word instruction;
+    // map stores opcode identifiers and pointers to functions for calling
+    std::map<byte, std::function<void()>> opcode_table;
 public:
     cpu_chip8();
+    void init_op_table();
+    void execute();
+
+private:
+    void CLS_or_RET();
 };
