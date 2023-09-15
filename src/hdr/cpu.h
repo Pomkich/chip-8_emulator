@@ -1,8 +1,6 @@
 #pragma once
+#include "constants.h"
 #include <iostream>
-
-typedef uint8_t byte;
-typedef uint16_t word;
 
 class cpu_chip8 {
 public:
