@@ -21,6 +21,13 @@ void cpu_chip8::init_op_table() {
     opcode_table[0x6] = std::bind(&cpu_chip8::LD, &(*this));
     opcode_table[0x7] = std::bind(&cpu_chip8::ADD, &(*this));
     opcode_table[0x8] = std::bind(&cpu_chip8::GRP_1, &(*this));
+    opcode_table[0x9] = std::bind(&cpu_chip8::SNE, &(*this));
+    opcode_table[0xA] = std::bind(&cpu_chip8::LD_I, &(*this));
+    opcode_table[0xB] = std::bind(&cpu_chip8::JP_V0, &(*this));
+    opcode_table[0xC] = std::bind(&cpu_chip8::RND, &(*this));
+    opcode_table[0xD] = std::bind(&cpu_chip8::DRW, &(*this));
+    opcode_table[0xE] = std::bind(&cpu_chip8::SKP_or_SKNP, &(*this));
+    opcode_table[0xF] = std::bind(&cpu_chip8::GRP_2, &(*this));
 }
 
 void cpu_chip8::execute() {
@@ -134,5 +141,79 @@ void cpu_chip8::GRP_1() {
             else { Vx[0xF] = 0; }
             Vx[id1] = Vx[id1] << 1;
             break;
+    }
+}
+
+void cpu_chip8::SNE() {
+    // low nimble must be zero
+    if ((low_instr & 0x0F) != 0) return;
+    // skip next command if Vx != Vy
+    if (Vx[high_instr & 0x0F] != Vx[low_instr >> 4]) {
+        PC += 2;
+    }
+}
+
+void cpu_chip8::LD_I() {
+    // set I to nnn
+    I = instruction & 0x0FFF;
+}
+
+void cpu_chip8::JP_V0() {
+    // set PC to nnn + V0
+    PC = instruction & 0x0FFF + Vx[0x0];
+}
+
+void cpu_chip8::RND() {
+    // generate random number and logical AND with kk
+    // should use srand(time(0)) for better randomize
+    Vx[high_instr & 0x0F] = rand() % 256 & low_instr;
+}
+
+void cpu_chip8::DRW() {
+    // skip
+}
+
+void cpu_chip8::SKP_or_SKNP() {
+    // skip
+}
+
+void cpu_chip8::GRP_2() {
+    byte id = high_instr & 0x0F;
+    byte counter = 0;   // value for cycle
+    switch (low_instr)  // low_inst repesents second byte of opcode
+    {
+    case 0x07:  // set Vx to delay timer
+        Vx[id] = delay_timer;
+        break;
+    case 0x0A:  // wait for a key
+        // skip
+        break;
+    case 0x15:  // set delay timer to Vx
+        delay_timer = Vx[id];
+        break;
+    case 0x18:  // set sound timer to Vx
+        sound_timer = Vx[id];
+        break;
+    case 0x1E:  // add Vx to I
+        I = I + Vx[id];
+        break;
+    case 0x29:  //  
+        // skip
+        break;
+    case 0x33:  // store BDC representation of Vx in memory addressed by I
+        mem->write(I, Vx[id] & 100);
+        mem->write(I + 1, Vx[id] & 10);
+        mem->write(I + 2, Vx[id] & 1);
+        break;
+    case 0x55:  // store registers V0 - Vx to memory addressed by I
+        for (counter; counter < id; counter++) {
+            mem->write(I + counter, Vx[counter]);
+        }
+        break;
+    case 0x65:  // load registers V0 - Vx from memory addressed by I
+        for (counter; counter < id; counter++) {
+            Vx[counter] = mem->read(I + counter);
+        }
+        break;
     }
 }
