@@ -174,7 +174,19 @@ void cpu_chip8::DRW() {
 }
 
 void cpu_chip8::SKP_or_SKNP() {
-    // skip
+    byte key = Vx[high_instr & 0x0F];
+    switch(low_instr) { // skip instruction if key pressed
+        case 0x9E:
+        if(pressed_keys[key] == true) {
+            PC += 2;
+        }
+        break;
+        case 0xA1:      // skip instruction if key not pressed
+        if(pressed_keys[key] == false) {
+            PC += 2;
+        }
+        break;
+    }
 }
 
 void cpu_chip8::GRP_2() {

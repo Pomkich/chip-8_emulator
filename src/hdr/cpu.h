@@ -4,6 +4,8 @@
 #include <iostream>
 #include <map>
 #include <functional>
+#include <SFML/Graphics.hpp>
+#include <Windows.h>
 
 class cpu_chip8 {
 public:
@@ -26,6 +28,8 @@ public:
     std::map<byte, std::function<void()>> opcode_table;
     // raw pointer to memory
     memory* mem;
+    // array that stores current pressed keys
+    bool pressed_keys[0xF];
 public:
     cpu_chip8();
     void init_op_table();   // initialize opcode table 
