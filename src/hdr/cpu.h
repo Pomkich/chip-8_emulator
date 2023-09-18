@@ -26,15 +26,16 @@ public:
     std::map<byte, std::function<void()>> opcode_table;
     // raw pointer to memory
     memory* mem;
-    // array that stores current pressed keys
+    // array stores current pressed keys
     bool pressed_keys[KEYS_SIZE];
-
+    // structure for thread variables
     sync_vars* channel;
 public:
     cpu_chip8();
     void init_op_table();   // initialize opcode table
     void init_sync_channel(sync_vars* ch); 
     void execute();         // execute one command
+    void run();
 
 private:
     // opcodes

@@ -2,6 +2,9 @@
 
 cpu_chip8::cpu_chip8() {
     mem = new memory();
+    for(int i = 0; i < 16; i++) {
+        pressed_keys[i] = 0;
+    }
 
     PC = 0x00;
     SP = 0x100;
@@ -43,6 +46,13 @@ void cpu_chip8::execute() {
     instruction = instruction | low_instr;
     // check only first 4 bits - they identify opcode
     opcode_table[(high_instr & 0xF0) >> 4]();
+}
+
+void cpu_chip8::run() {
+    while(true) {
+        execute();
+        std::this_thread::sleep_for(std::chrono::milliseconds(64));
+    }
 }
 
 // opcode functions
