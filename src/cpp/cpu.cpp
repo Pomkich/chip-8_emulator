@@ -229,3 +229,7 @@ void cpu_chip8::GRP_2() {
         break;
     }
 }
+
+bool* cpu_chip8::get_pk_ptr() {
+    return pressed_keys;
+}

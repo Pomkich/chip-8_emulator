@@ -4,8 +4,6 @@
 #include <iostream>
 #include <map>
 #include <functional>
-#include <SFML/Graphics.hpp>
-#include <Windows.h>
 
 class cpu_chip8 {
 public:
@@ -36,9 +34,10 @@ public:
     void execute();         // execute one command
 
 private:
+    // opcodes
     void CLS_or_RET();
-    void JP();          // jump to address nnn
-    void CALL();        //
+    void JP();
+    void CALL();
     void SE_IMM();
     void SNE_IMM();
     void SE();
@@ -52,4 +51,6 @@ private:
     void DRW();
     void SKP_or_SKNP();
     void GRP_2();
+public:
+    bool* get_pk_ptr();
 };
