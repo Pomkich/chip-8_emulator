@@ -6,12 +6,10 @@ cpu_chip8::cpu_chip8() {
         pressed_keys[i] = 0;
     }
 
-    PC = 0x00;
-    SP = 0x100;
-    mem->write(0x000, 0x22);
-    mem->write(0x001, 0x00);
-    mem->write(0x200, 0x00);
-    mem->write(0x201, 0xEE);
+    //mem->write(HEX_DIGITS_START_AREA, 0xF0)
+
+    PC = PROGRAM_START_AREA;
+    SP = STACK_START_AREA;
 }
 
 void cpu_chip8::init_op_table() {
@@ -183,8 +181,13 @@ void cpu_chip8::RND() {
     Vx[high_instr & 0x0F] = rand() % 256 & low_instr;
 }
 
+//!!!!!!!!!!!!!
 void cpu_chip8::DRW() {
-    // skip
+    byte x = high_instr & 0x0F;
+    byte y = low_instr << 4;
+    byte len = low_instr & 0x0F;
+
+    
 }
 
 void cpu_chip8::SKP_or_SKNP() {
