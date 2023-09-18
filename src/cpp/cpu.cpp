@@ -30,6 +30,10 @@ void cpu_chip8::init_op_table() {
     opcode_table[0xF] = std::bind(&cpu_chip8::GRP_2, &(*this));
 }
 
+void cpu_chip8::init_sync_channel(sync_vars* ch) {
+    channel = ch;
+}
+
 void cpu_chip8::execute() {
     high_instr = mem->read(PC++);
     low_instr = mem->read(PC++);
@@ -199,12 +203,12 @@ void cpu_chip8::GRP_2() {
         break;
     case 0x0A:  // wait for any a key, store key value to Vx
         {
-            std::unique_lock<std::mutex> lock(input_mut);   // locking mutex
-            input_cv.wait(lock, []{ return key_pressed; });  // wait until any key pressed
+            std::unique_lock<std::mutex> lock(channel->input_mut);   // locking mutex
+            channel->input_cv.wait(lock, [&]{ return channel->key_pressed; });  // wait until any key pressed
             for (int i = 0; i < KEYS_SIZE; i++) {   // find key id
                 if (pressed_keys[i] == 1) {
                     Vx[id] = i;   // store value in Vx
-                    key_pressed = false;
+                    channel->key_pressed = false;
                 }
             }
         }

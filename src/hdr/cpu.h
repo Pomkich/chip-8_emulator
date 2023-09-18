@@ -28,9 +28,12 @@ public:
     memory* mem;
     // array that stores current pressed keys
     bool pressed_keys[KEYS_SIZE];
+
+    sync_vars* channel;
 public:
     cpu_chip8();
-    void init_op_table();   // initialize opcode table 
+    void init_op_table();   // initialize opcode table
+    void init_sync_channel(sync_vars* ch); 
     void execute();         // execute one command
 
 private:
