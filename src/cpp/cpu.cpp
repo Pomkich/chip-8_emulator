@@ -197,8 +197,17 @@ void cpu_chip8::GRP_2() {
     case 0x07:  // set Vx to delay timer
         Vx[id] = delay_timer;
         break;
-    case 0x0A:  // wait for a key
-        // skip
+    case 0x0A:  // wait for any a key, store key value to Vx
+        {
+            std::unique_lock<std::mutex> lock(input_mut);   // locking mutex
+            input_cv.wait(lock, []{ return key_pressed; });  // wait until any key pressed
+            for (int i = 0; i < KEYS_SIZE; i++) {   // find key id
+                if (pressed_keys[i] == 1) {
+                    Vx[id] = i;   // store value in Vx
+                    key_pressed = false;
+                }
+            }
+        }
         break;
     case 0x15:  // set delay timer to Vx
         delay_timer = Vx[id];

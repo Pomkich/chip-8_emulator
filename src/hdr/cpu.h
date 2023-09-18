@@ -27,7 +27,7 @@ public:
     // raw pointer to memory
     memory* mem;
     // array that stores current pressed keys
-    bool pressed_keys[0xF];
+    bool pressed_keys[KEYS_SIZE];
 public:
     cpu_chip8();
     void init_op_table();   // initialize opcode table 
