@@ -182,11 +182,8 @@ void cpu_chip8::RND() {
 }
 
 // cyclic left shift
-uint64_t rotl64 (uint64_t n, unsigned int c)
-{
+uint64_t rotl64 (uint64_t n, unsigned int c) {
   const unsigned int mask = (CHAR_BIT * sizeof(n) - 1);
-
-  // assert ( (c<=mask) &&"rotate by type width or more");
   c &= mask;
   return (n << c) | (n >> ((-c) & mask));
 }
@@ -199,6 +196,10 @@ void cpu_chip8::DRW() {
 
     uint64_t row = 0;
     word offset = 0;
+    // variables used to check if any pixel was cleared
+    uint64_t new_row = 0;
+    uint64_t old_row = 0;
+    bool need_to_set = false;
     for (int i = 0; i < len; i++) {
         // place sprite byte in row
         row = mem->read(I + i);
@@ -207,8 +208,13 @@ void cpu_chip8::DRW() {
         row = rotl64(row, ((SCREEN_WIDTH - sizeof(byte)) - x));
         // and xor it with start position + ((row_id * row_size) % height)
         offset = DISPLAY_START_AREA + ((y * sizeof(uint64_t)) % SCREEN_HEIGHT);
-        mem->write_qw(offset, row ^ mem->read_qw(offset));
+        old_row = mem->read_qw(offset);
+        new_row = row ^ old_row;
+        mem->write_qw(offset, new_row);
+        // check if pixel was cleared
+        if (old_row > (new_row & old_row)) need_to_set = true;
     }
+    if (need_to_set) Vx[0xF] = 1;
 }
 
 void cpu_chip8::SKP_or_SKNP() {
