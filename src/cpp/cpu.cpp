@@ -6,8 +6,6 @@ cpu_chip8::cpu_chip8() {
         pressed_keys[i] = 0;
     }
 
-    //mem->write(HEX_DIGITS_START_AREA, 0xF0)
-
     PC = PROGRAM_START_AREA;
     SP = STACK_START_AREA;
 }
@@ -200,13 +198,16 @@ void cpu_chip8::DRW() {
     byte len = low_instr & 0x0F;
 
     uint64_t row = 0;
+    word offset = 0;
     for (int i = 0; i < len; i++) {
         // place sprite byte in row
         row = mem->read(I + i);
         // then cycle shift (56 - x) times to left
-        row = rotl64(row, (56 - x));
-        // and place it in start position + ((row_id * row_size) % height)
-        mem->write_qw(DISPLAY_START_AREA + ((y * sizeof(uint64_t)) % 32), row);
+        // 56 because row variable stores memory byte value, so it starts from eighth bit from end
+        row = rotl64(row, ((SCREEN_WIDTH - sizeof(byte)) - x));
+        // and xor it with start position + ((row_id * row_size) % height)
+        offset = DISPLAY_START_AREA + ((y * sizeof(uint64_t)) % SCREEN_HEIGHT);
+        mem->write_qw(offset, row ^ mem->read_qw(offset));
     }
 }
 
