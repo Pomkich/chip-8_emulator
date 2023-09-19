@@ -183,11 +183,11 @@ void cpu_chip8::RND() {
 
 //!!!!!!!!!!!!!
 void cpu_chip8::DRW() {
-    byte x = high_instr & 0x0F;
-    byte y = low_instr << 4;
-    byte len = low_instr & 0x0F;
+    //byte x = high_instr & 0x0F;
+    //byte y = low_instr << 4;
+    //byte len = low_instr & 0x0F;
 
-    
+    // skip
 }
 
 void cpu_chip8::SKP_or_SKNP() {

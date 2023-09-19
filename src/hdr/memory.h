@@ -14,4 +14,7 @@ public:
 
     word read_w(word address);
     void write_w(word address, word data);
+
+    uint64_t read_qw(word address);
+    void write_qw(word address, uint64_t data);
 };
