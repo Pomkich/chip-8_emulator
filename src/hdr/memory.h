@@ -17,4 +17,6 @@ public:
 
     uint64_t read_qw(word address);
     void write_qw(word address, uint64_t data);
+
+    void init_hex_digits();
 };

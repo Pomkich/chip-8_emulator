@@ -11,6 +11,7 @@ const int PROGRAM_START_AREA = 0x200;
 const int DISPLAY_START_AREA = 0x100;
 const int DISPLAY_END_AREA = 0x1FF;
 const int HEX_DIGITS_START_AREA = 0x4D;
+const int HEX_DIGITS_LENGTH = 5;
 
 const int SCREEN_WIDTH = 64;
 const int SCREEN_HEIGHT = 32;
