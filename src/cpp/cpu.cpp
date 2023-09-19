@@ -57,7 +57,9 @@ void cpu_chip8::run() {
 void cpu_chip8::CLS_or_RET() {
     // clear display
     if (low_instr == 0xE0) {
-        std::cout << "display cleared" << std::endl;
+        for (int i = DISPLAY_START_AREA; i <= DISPLAY_END_AREA; i++) {
+            mem->write(i, 0);
+        }
     }   // return
     else if (low_instr == 0xEE) {
         PC = mem->read_w(SP);   // take value from top of stack
@@ -181,13 +183,31 @@ void cpu_chip8::RND() {
     Vx[high_instr & 0x0F] = rand() % 256 & low_instr;
 }
 
-//!!!!!!!!!!!!!
-void cpu_chip8::DRW() {
-    //byte x = high_instr & 0x0F;
-    //byte y = low_instr << 4;
-    //byte len = low_instr & 0x0F;
+// cyclic left shift
+uint64_t rotl64 (uint64_t n, unsigned int c)
+{
+  const unsigned int mask = (CHAR_BIT * sizeof(n) - 1);
 
-    // skip
+  // assert ( (c<=mask) &&"rotate by type width or more");
+  c &= mask;
+  return (n << c) | (n >> ((-c) & mask));
+}
+
+void cpu_chip8::DRW() {
+    // draw sprite addressed by I with height n in pos(x, y)
+    byte x = high_instr & 0x0F;
+    byte y = low_instr << 4;
+    byte len = low_instr & 0x0F;
+
+    uint64_t row = 0;
+    for (int i = 0; i < len; i++) {
+        // place sprite byte in row
+        row = mem->read(I + i);
+        // then cycle shift (56 - x) times to left
+        row = rotl64(row, (56 - x));
+        // and place it in start position + ((row_id * row_size) % height)
+        mem->write_qw(DISPLAY_START_AREA + ((y * sizeof(uint64_t)) % 32), row);
+    }
 }
 
 void cpu_chip8::SKP_or_SKNP() {
