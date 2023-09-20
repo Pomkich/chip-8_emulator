@@ -35,10 +35,11 @@ void memory::write_w(word address, word data) {
 uint64_t memory::read_qw(word address) {
     if (address >= 0 && address < MAX_MEM_SIZE) {
         uint64_t res = 0;
-        for (int i = 0; i < sizeof(uint64_t); i++) {
+        for (int i = 0; i < sizeof(uint64_t) - 1; i++) {
             res |= byte_arr[address + i];
             res = res << 8;
         }
+        res |= byte_arr[address + 7];
         return res;
     }
     return 0;
@@ -46,9 +47,10 @@ uint64_t memory::read_qw(word address) {
 
 void memory::write_qw(word address, uint64_t data) {
     if (address >= 0 && address <= MAX_MEM_SIZE) {
-        for (int i = 0; i < sizeof(uint64_t); i++) {
-            byte_arr[address + ((sizeof(uint64_t) - i))] = data & 0x00000000000000FF;
+        byte_arr[address + 7] = data;
+        for (int i = 6; i >= 0; i--) {
             data = data >> 8;
+            byte_arr[address + i] = data;
         }
     }
 }

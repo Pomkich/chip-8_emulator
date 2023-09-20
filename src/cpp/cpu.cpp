@@ -207,7 +207,7 @@ void cpu_chip8::DRW() {
         row = mem->read(I + i);
         // then cycle shift (56 - x) times to left
         // 56 because row variable stores memory byte value, so it starts from eighth bit from end
-        row = rotl64(row, (SCREEN_WIDTH - x));
+        row = rotl64(row, (SCREEN_WIDTH - x - 8));
         // and xor it with start position + ((row_id * row_size) % height)
         offset = DISPLAY_START_AREA + (((y + i) % SCREEN_HEIGHT) * sizeof(uint64_t));
         old_row = mem->read_qw(offset);
