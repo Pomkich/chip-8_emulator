@@ -52,6 +52,23 @@ void memory::write_qw(word address, uint64_t data) {
     }
 }
 
+void memory::load_test_rom() {
+    std::ifstream rom("./test_opcode.ch8", std::ios::binary);
+    if (rom) {
+        std::cout << "file loaded" << std::endl;
+    } 
+    else {
+        std::cout << "file not loaded" << std::endl;
+    }
+    rom.seekg(0, std::ios::end);
+    int file_size = rom.tellg();
+
+    for (int i = 0; i < file_size; i++) {
+        rom >> byte_arr[PROGRAM_START_AREA + i];
+    }
+    rom.close();
+}
+
 void memory::init_hex_digits() {
     // ZERO
     byte_arr[HEX_DIGITS_START_AREA + 0] = 0xF0;

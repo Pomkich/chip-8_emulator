@@ -1,5 +1,7 @@
 #pragma once
 #include <memory>
+#include <fstream>
+#include <iostream>
 #include "constants.h"
 
 const int MAX_MEM_SIZE = 0xFFF;
@@ -18,5 +20,6 @@ public:
     uint64_t read_qw(word address);
     void write_qw(word address, uint64_t data);
 
+    void load_test_rom();
     void init_hex_digits();
 };

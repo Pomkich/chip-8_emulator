@@ -3,6 +3,7 @@
 cpu_chip8::cpu_chip8() {
     mem = new memory();
     mem->init_hex_digits();
+    mem->load_test_rom();
     for(int i = 0; i < 16; i++) {
         pressed_keys[i] = 0;
     }
