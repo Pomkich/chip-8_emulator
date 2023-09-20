@@ -287,3 +287,7 @@ void cpu_chip8::GRP_2() {
 bool* cpu_chip8::get_pk_ptr() {
     return pressed_keys;
 }
+
+memory* cpu_chip8::get_mem_ptr() {
+    return mem;
+}

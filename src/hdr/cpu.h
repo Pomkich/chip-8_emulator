@@ -57,4 +57,5 @@ private:
     void GRP_2();
 public:
     bool* get_pk_ptr();
+    memory* get_mem_ptr();
 };
