@@ -2,6 +2,7 @@
 
 memory::memory() {
     memset(byte_arr, 0, MAX_MEM_SIZE);
+    //memset(byte_arr + DISPLAY_START_AREA, 0xFF, 0x100);
 }
 
 byte memory::read(word address) {
@@ -44,16 +45,19 @@ uint64_t memory::read_qw(word address) {
 }
 
 void memory::write_qw(word address, uint64_t data) {
-    if (address >= 0 && address < MAX_MEM_SIZE) {
+    if (address >= 0 && address <= MAX_MEM_SIZE) {
         for (int i = 0; i < sizeof(uint64_t); i++) {
-            byte_arr[address + (sizeof(uint64_t) - i)] = data & 0x00000000000000FF;
+            byte_arr[address + ((sizeof(uint64_t) - i))] = data & 0x00000000000000FF;
             data = data >> 8;
         }
     }
 }
 
+//"./test_opcode.ch8"
+//./2-ibm-logo.ch8
+//./3-corax+.ch8
 void memory::load_test_rom() {
-    std::ifstream rom("./test_opcode.ch8", std::ios::binary);
+    std::ifstream rom("./3-corax+.ch8", std::ios::binary);
     if (rom) {
         std::cout << "file loaded" << std::endl;
     } 
@@ -62,9 +66,10 @@ void memory::load_test_rom() {
     }
     rom.seekg(0, std::ios::end);
     int file_size = rom.tellg();
-
-    for (int i = 0; i < file_size; i++) {
-        rom >> byte_arr[PROGRAM_START_AREA + i];
+    rom.seekg(std::ios::beg);
+    rom.unsetf(std::ios::skipws);
+    for (int i = PROGRAM_START_AREA; i < PROGRAM_START_AREA + file_size; i++) {
+        rom >> byte_arr[i];
     }
     rom.close();
 }

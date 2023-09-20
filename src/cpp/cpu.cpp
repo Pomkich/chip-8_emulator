@@ -49,7 +49,7 @@ void cpu_chip8::execute() {
 void cpu_chip8::run() {
     while(true) {
         execute();
-        std::this_thread::sleep_for(std::chrono::milliseconds(64));
+        std::this_thread::sleep_for(std::chrono::milliseconds(32));
     }
 }
 
@@ -192,8 +192,8 @@ uint64_t rotl64 (uint64_t n, unsigned int c) {
 
 void cpu_chip8::DRW() {
     // draw sprite addressed by I with height n in pos(x, y)
-    byte x = high_instr & 0x0F;
-    byte y = low_instr << 4;
+    byte x = Vx[high_instr & 0x0F];
+    byte y = Vx[low_instr >> 4];
     byte len = low_instr & 0x0F;
 
     uint64_t row = 0;
@@ -207,9 +207,9 @@ void cpu_chip8::DRW() {
         row = mem->read(I + i);
         // then cycle shift (56 - x) times to left
         // 56 because row variable stores memory byte value, so it starts from eighth bit from end
-        row = rotl64(row, ((SCREEN_WIDTH - sizeof(byte)) - x));
+        row = rotl64(row, (SCREEN_WIDTH - x));
         // and xor it with start position + ((row_id * row_size) % height)
-        offset = DISPLAY_START_AREA + ((y * sizeof(uint64_t)) % SCREEN_HEIGHT);
+        offset = DISPLAY_START_AREA + (((y + i) % SCREEN_HEIGHT) * sizeof(uint64_t));
         old_row = mem->read_qw(offset);
         new_row = row ^ old_row;
         mem->write_qw(offset, new_row);
