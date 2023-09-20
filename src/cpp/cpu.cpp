@@ -263,7 +263,7 @@ void cpu_chip8::GRP_2() {
     case 0x1E:  // add Vx to I
         I = I + Vx[id];
         break;
-    case 0x29:  // I is set to hex digit stored in Vx
+    case 0x29:  // I is set to address of hex digit stored in Vx
         I = HEX_DIGITS_START_AREA + Vx[id] * HEX_DIGITS_LENGTH;
         break;
     case 0x33:  // store BDC representation of Vx in memory addressed by I
