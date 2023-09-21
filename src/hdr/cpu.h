@@ -4,6 +4,7 @@
 #include <iostream>
 #include <map>
 #include <functional>
+#include <memory>
 
 class cpu_chip8 {
 public:
@@ -24,16 +25,16 @@ public:
     word instruction;
     // map stores opcode identifiers and pointers to functions for calling
     std::map<byte, std::function<void()>> opcode_table;
-    // raw pointer to memory
-    memory* mem;
+    // smart pointer to memory
+    std::shared_ptr<memory> mem;
     // array stores current pressed keys
     bool pressed_keys[KEYS_SIZE];
     // structure for thread variables
-    sync_vars* channel;
+    std::shared_ptr<sync_vars> channel;
 public:
     cpu_chip8();
     void init_op_table();   // initialize opcode table
-    void init_sync_channel(sync_vars* ch); 
+    void init_sync_channel(std::shared_ptr<sync_vars> ch); 
     void execute();         // execute one command
     void run();
 
@@ -57,5 +58,5 @@ private:
     void GRP_2();
 public:
     bool* get_pk_ptr();
-    memory* get_mem_ptr();
+    std::shared_ptr<memory> get_mem_ptr();
 };

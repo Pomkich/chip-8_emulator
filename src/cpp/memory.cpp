@@ -2,7 +2,6 @@
 
 memory::memory() {
     memset(byte_arr, 0, MAX_MEM_SIZE);
-    //memset(byte_arr + DISPLAY_START_AREA, 0xFF, 0x100);
 }
 
 byte memory::read(word address) {

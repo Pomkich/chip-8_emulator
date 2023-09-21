@@ -1,7 +1,7 @@
 #include "cpu.h"
 
 cpu_chip8::cpu_chip8() {
-    mem = new memory();
+    mem = std::make_shared<memory>();
     mem->init_hex_digits();
     mem->load_test_rom();
     for(int i = 0; i < 16; i++) {
@@ -31,7 +31,7 @@ void cpu_chip8::init_op_table() {
     opcode_table[0xF] = std::bind(&cpu_chip8::GRP_2, &(*this));
 }
 
-void cpu_chip8::init_sync_channel(sync_vars* ch) {
+void cpu_chip8::init_sync_channel(std::shared_ptr<sync_vars> ch) {
     channel = ch;
 }
 
@@ -289,6 +289,6 @@ bool* cpu_chip8::get_pk_ptr() {
     return pressed_keys;
 }
 
-memory* cpu_chip8::get_mem_ptr() {
+std::shared_ptr<memory> cpu_chip8::get_mem_ptr() {
     return mem;
 }
