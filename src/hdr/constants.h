@@ -15,6 +15,8 @@ const int HEX_DIGITS_LENGTH = 5;
 
 const int SCREEN_WIDTH = 64;
 const int SCREEN_HEIGHT = 32;
+const int X_SCALE = 8;
+const int Y_SCALE = 8;
 
 // the structure stores variables shared variables of threads
 // needed to declare one instance and pass it to the threads by pointer
