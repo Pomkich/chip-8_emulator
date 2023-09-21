@@ -268,17 +268,17 @@ void cpu_chip8::GRP_2() {
         I = HEX_DIGITS_START_AREA + Vx[id] * HEX_DIGITS_LENGTH;
         break;
     case 0x33:  // store BDC representation of Vx in memory addressed by I
-        mem->write(I, Vx[id] & 100);
-        mem->write(I + 1, Vx[id] & 10);
-        mem->write(I + 2, Vx[id] & 1);
+        mem->write(I, Vx[id] / 100);
+        mem->write(I + 1, (Vx[id] / 10) % 10);
+        mem->write(I + 2, Vx[id] % 10);
         break;
     case 0x55:  // store registers V0 - Vx to memory addressed by I
-        for (counter; counter < id; counter++) {
+        for (counter; counter <= id; counter++) {
             mem->write(I + counter, Vx[counter]);
         }
         break;
     case 0x65:  // load registers V0 - Vx from memory addressed by I
-        for (counter; counter < id; counter++) {
+        for (counter; counter <= id; counter++) {
             Vx[counter] = mem->read(I + counter);
         }
         break;
