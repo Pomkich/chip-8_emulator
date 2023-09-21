@@ -49,7 +49,7 @@ void cpu_chip8::execute() {
 void cpu_chip8::run() {
     while(true) {
         execute();
-        std::this_thread::sleep_for(std::chrono::milliseconds(32));
+        std::this_thread::sleep_for(std::chrono::milliseconds(16));
     }
 }
 
@@ -134,26 +134,30 @@ void cpu_chip8::GRP_1() {
             Vx[id1] += Vx[id2];
             // if carry out -> set VF
             if (temp > Vx[id1]) { Vx[0xF] = 1; }
+            else { Vx[0xF] = 0; }
             break;
         case 0x5:   // Vx SUB Vy, set VF if Vx > Vy, reset otherwise
-            if(Vx[id1] > Vx[id2]) { Vx[0xF] = 1; }
-            else { Vx[0xF] = 0; }
+            if(Vx[id1] > Vx[id2]) { temp = 1; }
+            else { temp = 0; }
             Vx[id1] -= Vx[id2];
+            Vx[0xF] = temp;
             break;
         case 0x6:   // Vx SHR 1, set VF if least-significant bit is 1
-            if ((Vx[id1] & 0x01) == 1) { Vx[0xF] = 1; }
-            else { Vx[0xF] = 0; }
+            if ((Vx[id1] & 0x01) == 1) { temp = 1; }
+            else { temp = 0; }
             Vx[id1] = Vx[id1] >> 1;
+            Vx[0xF] = temp;
             break;
         case 0x7:   // Vx SUBN Xy
+            Vx[id1] = Vx[id2] - Vx[id1];
             if (Vx[id1] < Vx[id2]) { Vx[0xF] = 1; }
             else { Vx[0xF] = 0; }
-            Vx[id1] = Vx[id2] - Vx[id1];
             break;
         case 0xE:   // Vx SHL 1, set VF if most-significant bit is 1
-            if ((Vx[id1] & 0x80) == 1) { Vx[0xF] = 1; }
-            else { Vx[0xF] = 0; }
+            if ((Vx[id1] & 0x80) == 0x80) { temp = 1; }
+            else { temp = 0; }
             Vx[id1] = Vx[id1] << 1;
+            Vx[0xF] = temp;
             break;
     }
 }

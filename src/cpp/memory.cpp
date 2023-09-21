@@ -57,8 +57,10 @@ void memory::write_qw(word address, uint64_t data) {
 //"./test_opcode.ch8"
 //./2-ibm-logo.ch8
 //./3-corax+.ch8
+//./4-flags.ch8
+//,/5-quirks.ch8
 void memory::load_test_rom() {
-    std::ifstream rom("./3-corax+.ch8", std::ios::binary);
+    std::ifstream rom("./5-quirks.ch8", std::ios::binary);
     if (rom) {
         std::cout << "file loaded" << std::endl;
     } 
