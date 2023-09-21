@@ -24,4 +24,6 @@ struct sync_vars {
     std::condition_variable input_cv;   // variables indicates that any key was pressed
     std::mutex input_mut; // mutex used in Fx0A opcode that wait until needed key pressed
     bool key_pressed;
+    byte key_code;
+    bool wait_for_key;
 };

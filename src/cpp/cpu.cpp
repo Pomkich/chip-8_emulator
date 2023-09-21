@@ -49,7 +49,6 @@ void cpu_chip8::execute() {
 void cpu_chip8::run() {
     while(true) {
         execute();
-        std::this_thread::sleep_for(std::chrono::milliseconds(16));
     }
 }
 
@@ -250,13 +249,11 @@ void cpu_chip8::GRP_2() {
     case 0x0A:  // wait for any a key, store key value to Vx
         {
             std::unique_lock<std::mutex> lock(channel->input_mut);   // locking mutex
+            channel->wait_for_key = true;
             channel->input_cv.wait(lock, [&]{ return channel->key_pressed; });  // wait until any key pressed
-            for (int i = 0; i < KEYS_SIZE; i++) {   // find key id
-                if (pressed_keys[i] == 1) {
-                    Vx[id] = i;   // store value in Vx
-                    channel->key_pressed = false;
-                }
-            }
+            Vx[id] = channel->key_code;
+            channel->key_pressed = false;
+            channel->key_code = -1;
         }
         break;
     case 0x15:  // set delay timer to Vx
