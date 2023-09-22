@@ -52,6 +52,7 @@ void cpu_chip8::execute() {
 void cpu_chip8::run() {
     while(true) {
         execute();
+        std::this_thread::sleep_for(std::chrono::nanoseconds(568));
     }
 }
 
@@ -82,7 +83,9 @@ void cpu_chip8::CLS_or_RET() {
 }
 
 void cpu_chip8::JP() {
-    PC = instruction & 0x0FFF;
+    if ((high_instr >> 4) == 0x1) {
+        PC = instruction & 0x0FFF;
+    }
 }
 
 void cpu_chip8::CALL() {
@@ -192,7 +195,9 @@ void cpu_chip8::LD_I() {
 
 void cpu_chip8::JP_V0() {
     // set PC to nnn + V0
-    PC = instruction & 0x0FFF + Vx[0x0];
+    if ((high_instr >> 4) == 0xB) {
+        PC = (instruction & 0x0FFF) + Vx[0x0];
+    }
 }
 
 void cpu_chip8::RND() {
@@ -226,7 +231,7 @@ void cpu_chip8::DRW() {
         // then cycle shift (56 - x) times to left
         // 56 because row variable stores memory byte value, so it starts from eighth bit from end
         row = rotl64(row, (SCREEN_WIDTH - x - 8));
-        // and xor it with start position + ((row_id * row_size) % height)
+        // and xor it with (start position + row_id) % height * row_size)
         offset = DISPLAY_START_AREA + (((y + i) % SCREEN_HEIGHT) * sizeof(uint64_t));
         old_row = mem->read_qw(offset);
         new_row = row ^ old_row;
