@@ -58,10 +58,10 @@ void memory::write_qw(word address, uint64_t data) {
 //./2-ibm-logo.ch8
 //./3-corax+.ch8
 //./4-flags.ch8
-//,/5-quirks.ch8
+//./5-quirks.ch8
 //./6-keypad.ch8
 void memory::load_test_rom() {
-    std::ifstream rom("./6-keypad.ch8", std::ios::binary);
+    std::ifstream rom("./5-quirks.ch8", std::ios::binary);
     if (rom) {
         std::cout << "file loaded" << std::endl;
     } 

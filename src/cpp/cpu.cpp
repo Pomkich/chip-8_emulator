@@ -10,6 +10,9 @@ cpu_chip8::cpu_chip8() {
 
     PC = PROGRAM_START_AREA;
     SP = STACK_START_AREA;
+
+    std::thread timer(&cpu_chip8::timer_tick, this);
+    timer.detach();
 }
 
 void cpu_chip8::init_op_table() {
@@ -49,6 +52,18 @@ void cpu_chip8::execute() {
 void cpu_chip8::run() {
     while(true) {
         execute();
+    }
+}
+
+void cpu_chip8::timer_tick() {
+    while(true) {
+        if (delay_timer > 0) {
+            delay_timer -= 1;
+        }
+        if (sound_timer > 0) {
+            sound_timer -= 1;
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(16));
     }
 }
 

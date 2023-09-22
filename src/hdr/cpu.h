@@ -37,6 +37,7 @@ public:
     void init_sync_channel(std::shared_ptr<sync_vars> ch); 
     void execute();         // execute one command
     void run();
+    void timer_tick();
 
 private:
     // opcodes
