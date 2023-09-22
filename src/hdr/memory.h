@@ -20,6 +20,6 @@ public:
     uint64_t read_qw(word address);
     void write_qw(word address, uint64_t data);
 
-    void load_test_rom();
+    void load_rom();
     void init_hex_digits();
 };

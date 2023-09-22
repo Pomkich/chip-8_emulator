@@ -60,14 +60,17 @@ void memory::write_qw(word address, uint64_t data) {
 //./4-flags.ch8
 //./5-quirks.ch8
 //./6-keypad.ch8
-void memory::load_test_rom() {
-    std::ifstream rom("./6-keypad.ch8", std::ios::binary);
-    if (rom) {
-        std::cout << "file loaded" << std::endl;
-    } 
-    else {
-        std::cout << "file not loaded" << std::endl;
+void memory::load_rom() {
+    std::cout << "enter rom name to load" << std::endl;
+    std::string rom_name;
+    std::cin >> rom_name;
+    std::ifstream rom(rom_name, std::ios::binary);
+    while (!rom) {
+        std::cout << "file not loaded, enter again" << std::endl;
+        std::cin >> rom_name;
+        rom.open(rom_name);
     }
+    std::cout << "file loaded" << std::endl;
     rom.seekg(0, std::ios::end);
     int file_size = rom.tellg();
     rom.seekg(std::ios::beg);

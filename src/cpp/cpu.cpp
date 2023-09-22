@@ -3,7 +3,7 @@
 cpu_chip8::cpu_chip8() {
     mem = std::make_shared<memory>();
     mem->init_hex_digits();
-    mem->load_test_rom();
+    mem->load_rom();
     for(int i = 0; i < 16; i++) {
         pressed_keys[i] = 0;
     }
