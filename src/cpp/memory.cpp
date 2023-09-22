@@ -61,7 +61,7 @@ void memory::write_qw(word address, uint64_t data) {
 //./5-quirks.ch8
 //./6-keypad.ch8
 void memory::load_test_rom() {
-    std::ifstream rom("./5-quirks.ch8", std::ios::binary);
+    std::ifstream rom("./6-keypad.ch8", std::ios::binary);
     if (rom) {
         std::cout << "file loaded" << std::endl;
     } 
