@@ -3,7 +3,6 @@
 cpu_chip8::cpu_chip8() {
     mem = std::make_shared<memory>();
     mem->init_hex_digits();
-    mem->load_rom();
     for(int i = 0; i < 16; i++) {
         pressed_keys[i] = 0;
     }
@@ -50,6 +49,7 @@ void cpu_chip8::execute() {
 }
 
 void cpu_chip8::run() {
+    mem->load_rom();
     while(true) {
         execute();
         std::this_thread::sleep_for(std::chrono::nanoseconds(568));
