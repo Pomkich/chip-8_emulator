@@ -18,12 +18,10 @@ const int SCREEN_HEIGHT = 32;
 const int X_SCALE = 8;
 const int Y_SCALE = 8;
 
-// the structure stores variables shared variables of threads
-// needed to declare one instance and pass it to the threads by pointer
+// the structure stores variables needed for Fx0A command
 struct sync_vars {
-    std::condition_variable input_cv;   // variables indicates that any key was pressed
-    std::mutex input_mut; // mutex used in Fx0A opcode that wait until needed key pressed
+    byte reg_to_store;
+    bool wait_for_key;
     bool key_pressed;
     byte key_code;
-    bool wait_for_key;
 };

@@ -29,7 +29,8 @@ public:
     std::shared_ptr<memory> mem;
     // array stores current pressed keys
     bool pressed_keys[KEYS_SIZE];
-    // structure for thread variables
+    // variable show how much instructions need to execute in this cycle
+    int to_execute;
     std::shared_ptr<sync_vars> channel;
 public:
     cpu_chip8();
@@ -37,7 +38,9 @@ public:
     void init_sync_channel(std::shared_ptr<sync_vars> ch); 
     void execute();         // execute one command
     void run();
-    void timer_tick();
+    void update_timers(int t);
+    void update_to_execute(int t_e);
+    void notify_key_pressed();
 
 private:
     // opcodes

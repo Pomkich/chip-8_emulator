@@ -9,9 +9,10 @@ cpu_chip8::cpu_chip8() {
 
     PC = PROGRAM_START_AREA;
     SP = STACK_START_AREA;
-
-    std::thread timer(&cpu_chip8::timer_tick, this);
-    timer.detach();
+    to_execute = 0;
+    delay_timer = 0;
+    sound_timer = 0;
+    mem->load_rom();
 }
 
 void cpu_chip8::init_op_table() {
@@ -49,22 +50,29 @@ void cpu_chip8::execute() {
 }
 
 void cpu_chip8::run() {
-    mem->load_rom();
-    while(true) {
+    while(to_execute > 0) {
         execute();
-        std::this_thread::sleep_for(std::chrono::nanoseconds(568));
+        to_execute--;
     }
 }
 
-void cpu_chip8::timer_tick() {
-    while(true) {
-        if (delay_timer > 0) {
-            delay_timer -= 1;
-        }
-        if (sound_timer > 0) {
-            sound_timer -= 1;
-        }
-        std::this_thread::sleep_for(std::chrono::milliseconds(16));
+void cpu_chip8::update_timers(int t) {
+    if (t > delay_timer) { delay_timer = 0; }
+    if (t > sound_timer) { sound_timer = 0; }
+    if (delay_timer > 0) { delay_timer -= t; }
+    if (sound_timer > 0) { sound_timer -= t; }
+}
+
+void cpu_chip8::update_to_execute(int t_e) {
+    // if waits key -> don't execute commands
+    if (!channel->wait_for_key) {
+        to_execute += t_e;
+    }
+}
+
+void cpu_chip8::notify_key_pressed() {
+    if (channel->key_pressed) {
+        Vx[channel->reg_to_store] = channel->key_code;
     }
 }
 
@@ -267,14 +275,9 @@ void cpu_chip8::GRP_2() {
         Vx[id] = delay_timer;
         break;
     case 0x0A:  // wait for any a key, store key value to Vx
-        {
-            std::unique_lock<std::mutex> lock(channel->input_mut);   // locking mutex
-            channel->wait_for_key = true;
-            channel->input_cv.wait(lock, [&]{ return channel->key_pressed; });  // wait until any key pressed
-            Vx[id] = channel->key_code;
-            channel->key_pressed = false;
-            channel->key_code = -1;
-        }
+        channel->wait_for_key = true;   // tell that need a key
+        channel->reg_to_store = id;     // remember register where to store key code
+        to_execute = 0;                 // halt processor until key press
         break;
     case 0x15:  // set delay timer to Vx
         delay_timer = Vx[id];
