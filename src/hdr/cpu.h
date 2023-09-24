@@ -31,6 +31,7 @@ public:
     bool pressed_keys[KEYS_SIZE];
     // variable show how much instructions need to execute in this cycle
     int to_execute;
+    // channel needs for Fx0A opcode
     std::shared_ptr<sync_vars> channel;
 public:
     cpu_chip8();
