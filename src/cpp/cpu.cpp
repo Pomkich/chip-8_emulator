@@ -259,7 +259,8 @@ void cpu_chip8::DRW() {
         // check if pixel was cleared
         if (old_row > (new_row & old_row)) need_to_set = true;
     }
-    if (need_to_set) Vx[0xF] = 1;
+    if (need_to_set) { Vx[0xF] = 1; }
+    else { Vx[0xF] = 0; }
 }
 
 void cpu_chip8::SKP_or_SKNP() {
