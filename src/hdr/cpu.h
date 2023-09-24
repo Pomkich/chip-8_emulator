@@ -38,6 +38,7 @@ public:
     void init_sync_channel(std::shared_ptr<sync_vars> ch); 
     void execute();         // execute one command
     void run();
+    void reset();
     void update_timers(int t);
     void update_to_execute(int t_e);
     void notify_key_pressed();

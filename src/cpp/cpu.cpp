@@ -12,7 +12,6 @@ cpu_chip8::cpu_chip8() {
     to_execute = 0;
     delay_timer = 0;
     sound_timer = 0;
-    mem->load_rom();
 }
 
 void cpu_chip8::init_op_table() {
@@ -54,6 +53,19 @@ void cpu_chip8::run() {
         execute();
         to_execute--;
     }
+}
+
+void cpu_chip8::reset() {
+    for(int i = 0; i < 16; i++) {
+        pressed_keys[i] = 0;
+    }
+
+    PC = PROGRAM_START_AREA;
+    SP = STACK_START_AREA;
+    to_execute = 0;
+    delay_timer = 0;
+    sound_timer = 0;
+    mem->load_rom();
 }
 
 void cpu_chip8::update_timers(int t) {
@@ -289,7 +301,7 @@ void cpu_chip8::GRP_2() {
         I = I + Vx[id];
         break;
     case 0x29:  // I is set to address of hex digit stored in Vx
-        I = HEX_DIGITS_START_AREA + Vx[id] * HEX_DIGITS_LENGTH;
+        I = HEX_DIGITS_START_AREA + (Vx[id] * HEX_DIGITS_LENGTH);
         break;
     case 0x33:  // store BDC representation of Vx in memory addressed by I
         mem->write(I, Vx[id] / 100);
