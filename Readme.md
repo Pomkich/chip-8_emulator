@@ -6,7 +6,7 @@ After that, you can compile the project using the commands:
 1. mkdir build
 2. cd build
 3. cmake ../
-4. cmake -build.
+4. cmake -build .
 ```
 After launching the program, you must enter the name of the ROM with the extension **".ch8"** into the console. After that, the selected disk will start. To run another program without leaving the emulator, you need to press **"R"**, then re-enter the ROM name.
 [ROMs can be found here:](https://github.com/kripod/chip8-roms)
