@@ -244,7 +244,7 @@ void cpu_chip8::DRW() {
     // variables used to check if any pixel was cleared
     uint64_t new_row = 0;
     uint64_t old_row = 0;
-    bool need_to_set = false;
+    Vx[0xF] = 0;
     for (int i = 0; i < len; i++) {
         // place sprite byte in row
         row = mem->read(I + i);
@@ -257,10 +257,8 @@ void cpu_chip8::DRW() {
         new_row = row ^ old_row;
         mem->write_qw(offset, new_row);
         // check if pixel was cleared
-        if (old_row > (new_row & old_row)) need_to_set = true;
+        if (old_row > (new_row & old_row)) Vx[0xF] = 1;
     }
-    if (need_to_set) { Vx[0xF] = 1; }
-    else { Vx[0xF] = 0; }
 }
 
 void cpu_chip8::SKP_or_SKNP() {

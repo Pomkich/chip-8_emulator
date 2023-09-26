@@ -61,6 +61,8 @@ void memory::write_qw(word address, uint64_t data) {
 //./5-quirks.ch8
 //./6-keypad.ch8
 void memory::load_rom() {
+    // clear display before reload
+    memset(byte_arr + DISPLAY_START_AREA, 0, DISPLAY_END_AREA - DISPLAY_START_AREA);
     std::cout << "enter rom name to load" << std::endl;
     std::string rom_name;
     std::cin >> rom_name;
